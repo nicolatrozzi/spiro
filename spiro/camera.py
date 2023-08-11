@@ -1,62 +1,6 @@
 import time
 from spiro.logger import log, debug
 
-class OldCamera:
-    def __init__(self):
-        debug('Legacy camera stack detected.')
-        self.camera = PiCamera()
-        self.type = 'legacy'
-        self.camera.framerate = 5
-        self.camera.iso = 50
-        self.camera.resolution = self.camera.MAX_RESOLUTION
-        self.camera.rotation = 90
-        self.camera.image_denoise = False
-        self.camera.meter_mode = 'spot'
-
-    def start_stream(self, output):
-        self.camera.resolution = "2592x1944"
-        self.camera.start_recording(output, format='mjpeg', resize='1024x768')
-
-    def stop_stream(self):
-        self.camera.stop_recording()
-        self.camera.resolution = camera.MAX_RESOLUTION
-
-    @property
-    def zoom(self):
-        return self.camera.zoom
-
-    @zoom.setter
-    def zoom(self, x, y, w, h):
-        self.camera.zoom = (x, y, w, h)
-    
-    def auto_exposure(self, value):
-        if value:
-            self.camera.shutter_speed = 0
-            self.camera.exposure_mode = "auto"
-            self.camera.iso = 0
-        else:
-            self.camera.exposure_mode = "off"
-
-    def capture(self, obj, format='png'):
-        self.camera.capture(obj, format=format)
-
-    @property
-    def shutter_speed(self):
-        return self.camera.shutter_speed
-
-    @property
-    def iso(self):
-        return self.camera.iso
-    
-    @iso.setter
-    def iso(self, value):
-        self.camera.iso = value
-    
-    def close(self):
-        self.camera.close()
-
-
-
 class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
@@ -178,11 +122,7 @@ try:
     from libcamera import controls
     cam = NewCamera()
 except ImportError:
-    try:
-        from picamera import PiCamera
-        cam = OldCamera()
-    except ImportError:
-        print("Both PiCamera2 (for libcamera) and PiCamera modules are missing. Please install the appropriate module.")
+        print("PiCamera2 (for libcamera) module is missing. Please install the appropriate module.")
         cam = None
 
 
