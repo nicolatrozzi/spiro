@@ -121,9 +121,10 @@ try:
     from picamera2.encoders import MJPEGEncoder
     from libcamera import controls
     cam = NewCamera()
-except ImportError:
-        print("PiCamera2 (for libcamera) module is missing. Please install the appropriate module.")
-        cam = None
+except ImportError as e:
+    print(f"Error: {e}")
+    print("PiCamera2 (for libcamera) module is missing. Please install the appropriate module.")
+    cam = None
 
 
 
