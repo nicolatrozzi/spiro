@@ -173,17 +173,15 @@ class NewCamera:
 
 try:
     from picamera import PiCamera
-    try: 
-        cam
-    except NameError: 
-        cam = OldCamera()
+    cam = OldCamera()
 except ImportError:
-    from picamera2 import PiCamera2
-    from picamera2.outputs import FileOutput
-    from picamera2.encoders import MJPEGEncoder
-    from libcamera import controls
-    try: 
-        cam
-    except NameError: 
+    try:
+        from picamera2 import PiCamera2
+        from picamera2.outputs import FileOutput
+        from picamera2.encoders import MJPEGEncoder
+        from libcamera import controls
         cam = NewCamera()
+    except ImportError:
+        print("Both PiCamera and PiCamera2 modules are missing. Please install the appropriate module.")
+        cam = None
 
