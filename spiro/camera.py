@@ -4,7 +4,7 @@ from spiro.logger import log, debug
 class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
-        self.camera = PiCamera2()
+        self.camera = Picamera2()
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
@@ -116,14 +116,14 @@ class NewCamera:
 
 
 try:
-    from picamera2 import PiCamera2
+    from picamera2 import Picamera2
     from picamera2.outputs import FileOutput
     from picamera2.encoders import MJPEGEncoder
     from libcamera import controls
     cam = NewCamera()
 except ImportError as e:
     print(f"Error: {e}")
-    print("PiCamera2 (for libcamera) module is missing. Please install the appropriate module.")
+    print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
     cam = None
 
 
