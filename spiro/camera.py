@@ -14,13 +14,19 @@ class NewCamera:
     
         # Print the available keys in camera_controls
         print("Available keys in camera_controls:", self.camera.camera_controls.keys())
-    
-        self.lens_limits = self.camera.camera_controls['LensPosition']
+        
+        if 'LensPosition' in self.camera.camera_controls:
+            self.lens_limits = self.camera.camera_controls['LensPosition']
+            self.camera.set_controls({"LensPosition": self.lens_limits[2]})
+        else:
+            print("LensPosition control not available for this camera.")
+            # Set some default value or handle the missing key in another way.
+            self.lens_limits = None
 
         self.camera.set_controls({'NoiseReductionMode': controls.draft.NoiseReductionModeEnum.Off,
                               'AeMeteringMode': controls.AeMeteringModeEnum.Spot,
-                              "AfMode": controls.AfModeEnum.Manual, 
-                              "LensPosition": self.lens_limits[2]})
+                              "AfMode": controls.AfModeEnum.Manual})
+
         self.camera.start()
 
     def start_stream(self, output):
@@ -116,7 +122,11 @@ class NewCamera:
         pass
     
     def focus(self, val):
+    if 'LensPosition' in self.camera.camera_controls:
         self.camera.set_controls({'LensPosition': val})
+    else:
+        print("LensPosition control not available for this camera.")
+        # Handle the error or do nothing
 
 
 try:
