@@ -6,13 +6,12 @@ class OldCamera:
         debug('Legacy camera stack detected.')
         self.camera = PiCamera()
         self.type = 'legacy'
-        # cam.framerate dictates longest exposure (1/cam.framerate)
-        cam.framerate = 5
-        cam.iso = 50
-        cam.resolution = self.camera.MAX_RESOLUTION
-        cam.rotation = 90
-        cam.image_denoise = False
-        self.cam.meter_mode = 'spot'
+        self.camera.framerate = 5
+        self.camera.iso = 50
+        self.camera.resolution = self.camera.MAX_RESOLUTION
+        self.camera.rotation = 90
+        self.camera.image_denoise = False
+        self.camera.meter_mode = 'spot'
 
     def start_stream(self, output):
         self.camera.resolution = "2592x1944"
@@ -61,7 +60,7 @@ class OldCamera:
 class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
-        self.camera = Picamera2()
+        self.camera = PiCamera2()
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
@@ -92,12 +91,12 @@ class NewCamera:
 
     @property
     def zoom(self):
-        return None # XXX
+        return None
 
-    def zoom(self, x, y, w, h):
-        '''libcamera wants these values in pixels whereas the legacy stack wants values as fractions.'''
+    def set_zoom(self, x, y, w, h):
         (resx, resy) = self.camera.camera_properties['PixelArraySize']
-        self.camera.set_controls({"ScalerCrop": (int(x * resx), int(y * resy), int(w * resx), (h * resy))})
+        self.camera.set_controls({"ScalerCrop": (int(x * resx), int(y * resy), int(w * resx), int(h * resy))})
+
     
     def auto_exposure(self, value):
         self.camera.set_controls({'AeEnable': value})
@@ -174,13 +173,17 @@ class NewCamera:
 
 try:
     from picamera import PiCamera
-    try: cam
-    except NameError: cam = OldCamera()
-except:
-    from picamera2 import Picamera2
+    try: 
+        cam
+    except NameError: 
+        cam = OldCamera()
+except ImportError:
+    from picamera2 import PiCamera2
     from picamera2.outputs import FileOutput
     from picamera2.encoders import MJPEGEncoder
     from libcamera import controls
-    try: cam
-    except NameError: cam = NewCamera()
+    try: 
+        cam
+    except NameError: 
+        cam = NewCamera()
 
