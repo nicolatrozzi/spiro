@@ -122,11 +122,11 @@ class NewCamera:
         pass
     
     def focus(self, val):
-    if 'LensPosition' in self.camera.camera_controls:
-        self.camera.set_controls({'LensPosition': val})
-    else:
-        print("LensPosition control not available for this camera.")
-        # Handle the error or do nothing
+        if 'LensPosition' in self.camera.camera_controls:
+            self.camera.set_controls({'LensPosition': val})
+        else:
+            print("LensPosition control not available for this camera.")
+            # Handle the error or do nothing
 
 
 try:
