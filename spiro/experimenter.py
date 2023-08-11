@@ -18,6 +18,8 @@ class Experimenter(threading.Thread):
     def __init__(self, hw=None, cam=None):
         self.hw = hw
         self.cam = cam
+        if self.cam is None:
+            raise ValueError("Camera is not initialized!")
         self.cfg = Config()
         self.delay = 60
         self.duration = 7
@@ -51,24 +53,21 @@ class Experimenter(threading.Thread):
         today = date.today().strftime('%Y.%m.%d')
         return today + ' ' + self.cfg.get('name')
 
-
+    def temporary_resolution(self, resolution):
+        oldres = self.cam.resolution
+        self.cam.resolution = resolution
+        yield
+        self.cam.resolution = oldres
+    
     def isDaytime(self):
         '''algorithm for daytime estimation.
            if the average pixel intensity is less than 10, we assume it is night.
            this may be tweaked for special use cases.'''
-        if self.cam.type == 'legacy':
-            oldres = self.cam.resolution
-            self.cam.resolution = (320, 240)
+         with self.temporary_resolution((320, 240)):
             self.cam.iso = self.cfg.get('dayiso')
             self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
             output = np.empty((240, 320, 3), dtype=np.uint8)
             self.cam.capture(output, 'rgb')
-            self.cam.resolution = oldres
-            debug("Daytime estimation mean value: " + str(output.mean()))
-        else:
-            # XXX: clean this up
-            self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
-            output = self.cam.camera.capture_array('lores')
             debug("Daytime estimation mean value: " + str(output.mean()))
         return output.mean() > 10
 
@@ -135,6 +134,10 @@ class Experimenter(threading.Thread):
             raw_res = tuple(self.cam.resolution)
         stream.seek(0)
         im = Image.frombytes('RGB', raw_res, stream.read()).crop(box=(0,0)+self.cam.resolution)
+        
+        if not os.path.exists(self.dir):
+            os.makedirs(self.dir)
+
         im.save(filename)
 
         # make thumbnail previews for experiment overview page
@@ -240,7 +243,11 @@ class Experimenter(threading.Thread):
 
                 while time.time() < nextloop and not self.stop_experiment:
                     time.sleep(1)
+                    
+        except Exception as e:
+            log(f"An error occurred during the experiment: {e}")
 
+        
         finally:
             log("Experiment stopped.")
             self.cam.color_effects = None
