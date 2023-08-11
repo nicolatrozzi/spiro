@@ -3,25 +3,25 @@ from spiro.logger import log, debug
 
 class NewCamera:
     def __init__(self):
-    debug('Libcamera detected.')
-    self.camera = Picamera2()
-    self.type = 'libcamera'
-    self.streaming = False
-    self.stream_output = None
-    self.still_config = self.camera.create_still_configuration(main={"size": (4608, 3456)}, lores={"size": (320, 240)})
-    self.video_config = self.camera.create_video_configuration(main={"size": (1024, 768)})
-    self.camera.configure(self.video_config)
+        debug('Libcamera detected.')
+        self.camera = Picamera2()
+        self.type = 'libcamera'
+        self.streaming = False
+        self.stream_output = None
+        self.still_config = self.camera.create_still_configuration(main={"size": (4608, 3456)}, lores={"size": (320, 240)})
+        self.video_config = self.camera.create_video_configuration(main={"size": (1024, 768)})
+        self.camera.configure(self.video_config)
     
-    # Print the available keys in camera_controls
-    print("Available keys in camera_controls:", self.camera.camera_controls.keys())
+        # Print the available keys in camera_controls
+        print("Available keys in camera_controls:", self.camera.camera_controls.keys())
     
-    self.lens_limits = self.camera.camera_controls['LensPosition']
+        self.lens_limits = self.camera.camera_controls['LensPosition']
 
-    self.camera.set_controls({'NoiseReductionMode': controls.draft.NoiseReductionModeEnum.Off,
+        self.camera.set_controls({'NoiseReductionMode': controls.draft.NoiseReductionModeEnum.Off,
                               'AeMeteringMode': controls.AeMeteringModeEnum.Spot,
                               "AfMode": controls.AfModeEnum.Manual, 
                               "LensPosition": self.lens_limits[2]})
-    self.camera.start()
+        self.camera.start()
 
     def start_stream(self, output):
         log('Starting stream.')
