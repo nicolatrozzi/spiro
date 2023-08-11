@@ -7,7 +7,7 @@ import traceback
 import subprocess
 
 from waitress import serve
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 
 from spiro.config import Config
 from spiro.logger import log, debug
@@ -28,22 +28,29 @@ def index():
 
 @app.route('/log')
 def get_log():
-    p = subprocess.Popen(['/bin/journalctl', '--user-unit=spiro', '-n', '1000'], stdout=subprocess.PIPE)
-    return Response(stream_popen(p), mimetype='text/plain')
+    try:
+        p = subprocess.Popen(['/bin/journalctl', '--user-unit=spiro', '-n', '1000'], stdout=subprocess.PIPE)
+        return Response(stream_popen(p), mimetype='text/plain')
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 @app.route('/shutdown')
 def shutdown():
-    subprocess.run(['sudo', 'shutdown', '-h', 'now'])
-    return render_template('shutdown.html')
+    try:
+        subprocess.run(['sudo', 'shutdown', '-h', 'now'])
+        return render_template('shutdown.html')
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 @app.route('/reboot')
 def reboot():
-    global restarting
-    restarting = True
-    subprocess.Popen(['sudo', 'shutdown', '-r', 'now'])
-    return render_template('restarting.html', refresh=120, message="Rebooting system...")
+    try:
+        subprocess.Popen(['sudo', 'shutdown', '-r', 'now'])
+        return render_template('restarting.html', refresh=120, message="Rebooting system...")
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 @app.route('/exit')
@@ -51,6 +58,10 @@ def exit():
     signal.alarm(1)
     return render_template('restarting.html', refresh=10, message="Restarting web UI...")
 
+def handle_sigalrm(signum, frame):
+    raise SystemExit("Exiting after signal")
+
+signal.signal(signal.SIGALRM, handle_sigalrm)
 
 def start(e=None):
     global err
