@@ -131,8 +131,10 @@ def main():
 
     # no options given, go ahead and start web ui
     try:
-        from spiro.camera import Camera  # Assuming the camera object is named "Camera" in spiro.camera module
-        cam = Camera()  # Initialize the camera
+        from camera import NewCamera, cam  # Import NewCamera class and global cam instance from camera.py
+
+        if cam is None:  # If the global cam instance doesn't exist, create one
+            cam = NewCamera()  
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
         log('Starting web UI.')
@@ -141,7 +143,6 @@ def main():
         failed = True
         failsafe.start(e)
         log(f"Unexpected exception occurred: {e}")
-
 
 if __name__ == '__main__':
     main()
