@@ -92,18 +92,6 @@ def not_while_running(decorated_function):
     decorated_function.not_while_running = True
     return decorated_function
 
-restarting = False
-livestream = False
-nightshutter = None
-dayshutter = None
-camera = None
-hw = None
-liveoutput = StreamingOutput()
-nightstill = io.BytesIO()
-daystill = io.BytesIO()
-zoomer = ZoomObject()
-cfg = Config()
-lock = Lock()
 
 @app.before_request
 def check_route_access():
@@ -517,19 +505,9 @@ def settings():
         if request.form.get('name'):
             cfg.set('name', request.form.get('name'))
     ssid, passwd = hostapd.get_ssid()
-    if cfg.get('debug'):
-        # Add the buttons only if debug mode is enabled
-        save_button = url_for('save_config')
-        load_button = url_for('load_config')
-    else:
-        save_button = None
-        load_button = None
-
     return render_template('settings.html', name=cfg.get('name'), running=experimenter.running, version=cfg.version,
-                       debug=cfg.get('debug'), ip_addr=get_external_ip(), hotspot_ready=hostapd.is_ready(),
-                       hotspot_enabled=hostapd.is_enabled(), ssid=ssid, passwd=passwd,
-                       save_button=save_button, load_button=load_button)
-
+                           debug=cfg.get('debug'), ip_addr=get_external_ip(), hotspot_ready=hostapd.is_ready(),
+                           hotspot_enabled=hostapd.is_enabled(), ssid=ssid, passwd=passwd)
 
 
 @not_while_running
@@ -598,13 +576,10 @@ def verify_dir(check_dir):
     return os.path.dirname(check_dir) == dir and not os.path.basename(check_dir).startswith('.') and os.path.isdir(check_dir)
 
 
-@app.route('/get_log')
+@app.route('/log')
 def get_log():
-    try:
-        p = subprocess.Popen(['/bin/journalctl', '--user-unit=spiro', '-n', '1000'], stdout=subprocess.PIPE)
-        return Response(stream_popen(p), mimetype='text/plain')
-    except subprocess.CalledProcessError:
-        return "Error fetching logs", 500
+    p = subprocess.Popen(['/bin/journalctl', '--user-unit=spiro', '-n', '1000'], stdout=subprocess.PIPE)
+    return Response(stream_popen(p), mimetype='text/plain')
 
 
 def stream_popen(p):
@@ -628,46 +603,14 @@ def set_debug(value):
 
 def get_external_ip():
     """returns the IPv4 address of eth0"""
-    try:
-        p = subprocess.Popen(['/sbin/ip', '-4', '-o', 'a', 'show', 'eth0'], stdout=subprocess.PIPE, text=True)
-        data = p.stdout.read()
-        ip_match = re.search(r'\s(\d+\.\d+\.\d+\.\d+)/', data)
-        if ip_match:
-            return ip_match.group(1)
-        else:
-            return 'Unknown'
-    except subprocess.CalledProcessError:
-        return "Error fetching IP", 500
+    p = subprocess.Popen(['/sbin/ip', '-4', '-o', 'a', 'show', 'eth0'], stdout=subprocess.PIPE, text=True)
+    data = p.stdout.read()
+    ip_match = re.search(r'\s(\d+\.\d+\.\d+\.\d+)/', data)
+    if ip_match:
+        return ip_match.group(1)
+    else:
+        return 'Unknown'
 
-def save_configuration(filename="/mnt/data/spiro_config.cfg"):
-    """Save the current configuration to a file."""
-    with open(filename, 'w') as file:
-        for key, value in cfg._data.items():
-            file.write(f"{key}={value}\n")
-
-def load_configuration(filename="/mnt/data/spiro_config.cfg"):
-    """Load configuration from a file."""
-    if not os.path.exists(filename):
-        return  # Exit if file does not exist
-
-    with open(filename, 'r') as file:
-        for line in file.readlines():
-            key, value = line.strip().split('=')
-            cfg.set(key, value)
-
-@app.route('/save_config', methods=['GET'])
-def save_config():
-    """Route to trigger saving the configuration."""
-    save_configuration()
-    flash("Configuration saved successfully.")
-    return redirect(url_for('settings'))
-
-@app.route('/load_config', methods=['GET'])
-def load_config():
-    """Route to trigger loading the configuration."""
-    load_configuration()
-    flash("Configuration loaded successfully.")
-    return redirect(url_for('settings'))
 
 @app.route('/hotspot/<value>')
 def set_hotspot(value):
@@ -680,6 +623,23 @@ def set_hotspot(value):
     else:
         abort(404)
     return redirect(url_for('settings'))
+
+
+liveoutput = StreamingOutput()
+nightstill = io.BytesIO()
+daystill = io.BytesIO()
+zoomer = ZoomObject()
+cfg = Config()
+lock = Lock()
+
+experimenter = None
+nightshutter = None
+dayshutter = None
+camera = None
+hw = None
+
+restarting = False
+livestream = False
 
 def start(cam, myhw):
     global camera, hw, experimenter
