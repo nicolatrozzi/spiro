@@ -1,7 +1,17 @@
 import time
 from spiro.logger import log, debug
 
-class Camera:
+try:
+    from picamera2 import Picamera2
+    from picamera2.outputs import FileOutput
+    from picamera2.encoders import MJPEGEncoder
+    from libcamera import controls
+except ImportError as e:
+    print(f"Error: {e}")
+    print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
+    exit()  # Exit the script if the necessary modules are missing
+
+class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
         self.camera = Picamera2()
@@ -137,14 +147,4 @@ class Camera:
             print("LensPosition control not available for this camera.")
             # Handle the error or do nothing
 
-
-try:
-    from picamera2 import Picamera2
-    from picamera2.outputs import FileOutput
-    from picamera2.encoders import MJPEGEncoder
-    from libcamera import controls
-    cam = Camera()
-except ImportError as e:
-    print(f"Error: {e}")
-    print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
-    cam = None
+cam = NewCamera()
