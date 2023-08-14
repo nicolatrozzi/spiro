@@ -16,7 +16,7 @@ import spiro.webui as webui
 import argparse
 import signal
 import sys
-from camera import create_camera_instance
+from spiro.camera import create_camera_instance
 
 def parse_args():
     """Parse command-line arguments."""
