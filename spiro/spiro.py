@@ -131,8 +131,8 @@ def main():
 
     # no options given, go ahead and start web ui
     try:
-        from spiro.camera import cam
-        cam = Camera()  # Initialize the camera
+        from spiro.camera import Camera
+        cam = Camera()
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
         log('Starting web UI.')
