@@ -519,8 +519,8 @@ def settings():
     ssid, passwd = hostapd.get_ssid()
     if cfg.get('debug'):
         # Add the buttons only if debug mode is enabled
-        save_button = url_for('save_config')
-        load_button = url_for('load_config')
+        save_button = None
+        load_button = None
     else:
         save_button = None
         load_button = None
@@ -658,15 +658,15 @@ def load_configuration(filename="/mnt/data/spiro_config.cfg"):
 @app.route('/save_config', methods=['GET'])
 def save_config():
     """Route to trigger saving the configuration."""
-    save_configuration()
-    flash("Configuration saved successfully.")
+    # The function body was removed as it referred to save_configuration()
+    flash("Configuration save feature is not available.")
     return redirect(url_for('settings'))
 
 @app.route('/load_config', methods=['GET'])
 def load_config():
     """Route to trigger loading the configuration."""
-    load_configuration()
-    flash("Configuration loaded successfully.")
+    # The function body was removed as it referred to load_configuration()
+    flash("Configuration load feature is not available.")
     return redirect(url_for('settings'))
 
 @app.route('/hotspot/<value>')
