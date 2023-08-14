@@ -56,17 +56,6 @@ class Experimenter(threading.Thread):
         '''algorithm for daytime estimation.
            if the average pixel intensity is less than 10, we assume it is night.
            this may be tweaked for special use cases.'''
-        if self.cam.type == 'legacy':
-            oldres = self.cam.resolution
-            self.cam.resolution = (320, 240)
-            self.cam.iso = self.cfg.get('dayiso')
-            self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
-            output = np.empty((240, 320, 3), dtype=np.uint8)
-            self.cam.capture(output, 'rgb')
-            self.cam.resolution = oldres
-            debug("Daytime estimation mean value: " + str(output.mean()))
-        else:
-            # XXX: clean this up
             self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
             output = self.cam.camera.capture_array('lores')
             debug("Daytime estimation mean value: " + str(output.mean()))
