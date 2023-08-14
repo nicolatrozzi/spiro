@@ -131,10 +131,8 @@ def main():
 
     # no options given, go ahead and start web ui
     try:
-        from camera import NewCamera, cam  # Import NewCamera class and global cam instance from camera.py
-
-        if cam is None:  # If the global cam instance doesn't exist, create one
-            cam = NewCamera()  
+        from camera import cam  # Import global cam instance from camera.py
+        
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
         log('Starting web UI.')
