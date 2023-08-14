@@ -5,7 +5,7 @@
 import RPi.GPIO as gpio
 import time
 import os
-from spiro.camera import cam
+from camera import create_camera_instance
 from spiro.config import Config
 from spiro.logger import log, debug
 
