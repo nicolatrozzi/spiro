@@ -5,7 +5,7 @@ try:
     from picamera2 import Picamera2
     from picamera2.outputs import FileOutput
     from picamera2.encoders import MJPEGEncoder
-    from libcamera import controls
+    from libcamera import controls, Transform
 except ImportError as e:
     print(f"Error: {e}")
     print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
@@ -15,7 +15,11 @@ class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
         self.camera = Picamera2()
-        self.camera.rotation = 90  # Rotate the camera feed by 90 degrees clockwise
+        # Setting the rotation using transformation:
+        preview_config = self.camera.create_preview_configuration()
+        # Rotate 90 degrees clockwise. 
+        preview_config["transform"] = Transform(hflip=1, vflip=0) 
+        self.camera.configure(preview_config)
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
