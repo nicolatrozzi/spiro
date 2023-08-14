@@ -21,6 +21,14 @@ class NewCamera:
         self.still_config = self.camera.create_still_configuration(main={"size": (4608, 3456)}, lores={"size": (320, 240)})
         self.video_config = self.camera.create_video_configuration(main={"size": (1024, 768)})
         self.camera.configure(self.video_config)
+        
+         # Define the default scaler crop as the full resolution
+        self._zoom = {
+            "x": 0,
+            "y": 0,
+            "w": 1,  # This signifies the full width
+            "h": 1   # This signifies the full height
+        }
     
         # Print the available keys in camera_controls
         print("Available keys in camera_controls:", self.camera.camera_controls.keys())
@@ -64,11 +72,25 @@ class NewCamera:
 
     @property
     def zoom(self):
-        return None
+        return self._zoom
+
+    @zoom.setter
+    def zoom(self, value):
+        x, y, w, h = value
+        self.set_zoom(x, y, w, h)
 
     def set_zoom(self, x, y, w, h):
+        self._zoom = {
+            "x": x,
+            "y": y,
+            "w": w,
+            "h": h
+        }
+
         (resx, resy) = self.camera.camera_properties['PixelArraySize']
-        self.camera.set_controls({"ScalerCrop": (int(x * resx), int(y * resy), int(w * resx), int(h * resy))})
+        self.camera.set_controls({
+            "ScalerCrop": (int(x * resx), int(y * resy), int(w * resx), int(h * resy))
+        })
 
     
     def auto_exposure(self, value):
