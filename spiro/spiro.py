@@ -131,7 +131,7 @@ def main():
 
     # no options given, go ahead and start web ui
     try:
-        from spiro.camera import Camera  # Assuming the camera object is named "Camera" in spiro.camera module
+        from spiro.camera import cam
         cam = Camera()  # Initialize the camera
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
