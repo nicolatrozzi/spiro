@@ -138,17 +138,18 @@ class NewCamera:
             # Handle the error or do nothing
 
 
-try:
-    from picamera2 import Picamera2
-    from picamera2.outputs import FileOutput
-    from picamera2.encoders import MJPEGEncoder
-    from libcamera import controls
-    cam = NewCamera()
-except ImportError as e:
-    print(f"Error: {e}")
-    print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
-    cam = None
+def create_camera_instance():
+    try:
+        from picamera2 import Picamera2
+        from picamera2.outputs import FileOutput
+        from picamera2.encoders import MJPEGEncoder
+        from libcamera import controls
 
-
-
-
+        return NewCamera()
+    except ImportError as e:
+        print(f"Error: {e}")
+        print("Picamera2 (for libcamera) module is missing. Please install the appropriate module.")
+        return None
+    except Exception as e:
+        print(f"Unexpected error while creating camera instance: {e}")
+        return None
