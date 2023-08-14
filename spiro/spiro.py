@@ -16,6 +16,7 @@ import spiro.webui as webui
 import argparse
 import signal
 import sys
+from camera import create_camera_instance
 
 def parse_args():
     """Parse command-line arguments."""
@@ -102,6 +103,7 @@ def main():
     """Main execution function."""
     global cam, failed, cfg, hw
     options = parse_args()
+    
     if options.reset:
         print("Clearing all configuration values.")
         try:
@@ -129,10 +131,14 @@ def main():
             options.enable_ap, options.disable_ap]):
         sys.exit()
 
+    # Initialize the camera here
+    cam = create_camera_instance()
+    if cam is None:
+        print("Failed to initialize the camera. Exiting.")
+        sys.exit(1)
+    
     # no options given, go ahead and start web ui
     try:
-        from camera import cam  # Import global cam instance from camera.py
-        
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
         log('Starting web UI.')
