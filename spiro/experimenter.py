@@ -54,11 +54,11 @@ class Experimenter(threading.Thread):
 
     def isDaytime(self):
         '''algorithm for daytime estimation.
-           if the average pixel intensity is less than 10, we assume it is night.
-           this may be tweaked for special use cases.'''
-            self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
-            output = self.cam.camera.capture_array('lores')
-            debug("Daytime estimation mean value: " + str(output.mean()))
+        if the average pixel intensity is less than 10, we assume it is night.
+        this may be tweaked for special use cases.'''
+        self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
+        output = self.cam.camera.capture_array('lores')
+        debug("Daytime estimation mean value: " + str(output.mean()))
         return output.mean() > 10
 
 
