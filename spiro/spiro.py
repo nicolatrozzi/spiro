@@ -16,29 +16,31 @@ import spiro.webui as webui
 import argparse
 import signal
 import sys
-from spiro.camera import create_camera_instance
 
-parser = argparse.ArgumentParser(
-             description=textwrap.dedent("""\
-                                         SPIRO control software.
-                                         Running this command without any flags starts the web interface.
-                                         Specifying flags will perform those actions, then exit."""))
-parser.add_argument('--reset-config', action="store_true", dest="reset",
-                    help="reset all configuration values to defaults")
-parser.add_argument('--reset-password', action="store_true", dest="resetpw",
-                    help="reset web UI password")
-parser.add_argument('--install-service', action="store_true", dest="install",
-                    help="install systemd user service file")
-parser.add_argument('--toggle-debug', action="store_true", dest="toggle_debug",
-                    help="toggles additional debug logging on or off")
-parser.add_argument('--enable-hotspot', action="store_true", dest="enable_ap",
-                    help="enables the wi-fi hotspot")
-parser.add_argument('--disable-hotspot', action="store_true", dest="disable_ap",
-                    help="disables the wi-fi hotspot")
-options = parser.parse_args()
+def parse_args():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description=textwrap.dedent("""\
+                                    SPIRO control software.
+                                    Running this command without any flags starts the web interface.
+                                    Specifying flags will perform those actions, then exit."""))
+    parser.add_argument('--reset-config', action="store_true", dest="reset",
+                        help="reset all configuration values to defaults")
+    parser.add_argument('--reset-password', action="store_true", dest="resetpw",
+                        help="reset web UI password")
+    parser.add_argument('--install-service', action="store_true", dest="install",
+                        help="install systemd user service file")
+    parser.add_argument('--toggle-debug', action="store_true", dest="toggle_debug",
+                        help="toggles additional debug logging on or off")
+    parser.add_argument('--enable-hotspot', action="store_true", dest="enable_ap",
+                        help="enables the wi-fi hotspot")
+    parser.add_argument('--disable-hotspot', action="store_true", dest="disable_ap",
+                        help="disables the wi-fi hotspot")
+    return parser.parse_args()
 
 
 def installService():
+    """Install the systemd service for the software."""
     try:
         os.makedirs(os.path.expanduser('~/.config/systemd/user'), exist_ok=True)
     except OSError as e:
@@ -62,7 +64,8 @@ def installService():
 
 
 def terminate(sig, frame):
-    global shutdown
+    """Handle termination signals to safely shutdown the application."""
+    global shutdown, cam, hw, failed
     if sig == signal.SIGALRM:
         # force shutdown
         debug("Shut down time-out, force-quitting.")
@@ -85,7 +88,7 @@ def terminate(sig, frame):
     hw.cleanup()
     sys.exit()
 
-
+# Global Variables
 shutdown = False
 cfg = Config()
 cam = None
@@ -96,14 +99,9 @@ for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGQUIT, signal.SIGHUP, signal
 
 # start here.
 def main():
-<<<<<<< HEAD
     """Main execution function."""
     global cam, failed, cfg, hw
     options = parse_args()
-    
-=======
-    global cam
->>>>>>> parent of f90f616 (Update spiro.py)
     if options.reset:
         print("Clearing all configuration values.")
         try:
@@ -131,30 +129,19 @@ def main():
             options.enable_ap, options.disable_ap]):
         sys.exit()
 
-    # Initialize the camera here
-    cam = create_camera_instance()
-    if cam is None:
-        print("Failed to initialize the camera. Exiting.")
-        sys.exit(1)
-    
     # no options given, go ahead and start web ui
     try:
-<<<<<<< HEAD
-=======
-        from spiro.camera import cam
->>>>>>> parent of f90f616 (Update spiro.py)
+        from spiro.camera import Camera  # Assuming the camera object is named "Camera" in spiro.camera module
+        cam = Camera()  # Initialize the camera
         gpio.setmode(gpio.BCM)
         hw.GPIOInit()
         log('Starting web UI.')
         webui.start(cam, hw)
     except Exception as e:
-        global failed
         failed = True
         failsafe.start(e)
-<<<<<<< HEAD
         log(f"Unexpected exception occurred: {e}")
+
 
 if __name__ == '__main__':
     main()
-=======
->>>>>>> parent of f90f616 (Update spiro.py)
