@@ -15,6 +15,7 @@ class NewCamera:
     def __init__(self):
         debug('Libcamera detected.')
         self.camera = Picamera2()
+        self.camera.rotation = 90  # Rotate the camera feed by 90 degrees clockwise
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
