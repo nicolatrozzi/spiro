@@ -24,19 +24,6 @@ app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
-restarting = False
-livestream = False
-nightshutter = None
-dayshutter = None
-camera = None
-hw = None
-liveoutput = StreamingOutput()
-nightstill = io.BytesIO()
-daystill = io.BytesIO()
-zoomer = ZoomObject()
-cfg = Config()
-lock = Lock()
-
 class Rotator(Thread):
     def __init__(self, value):
         Thread.__init__(self)
@@ -105,6 +92,18 @@ def not_while_running(decorated_function):
     decorated_function.not_while_running = True
     return decorated_function
 
+restarting = False
+livestream = False
+nightshutter = None
+dayshutter = None
+camera = None
+hw = None
+liveoutput = StreamingOutput()
+nightstill = io.BytesIO()
+daystill = io.BytesIO()
+zoomer = ZoomObject()
+cfg = Config()
+lock = Lock()
 
 @app.before_request
 def check_route_access():
