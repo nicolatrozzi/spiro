@@ -66,4 +66,4 @@ signal.signal(signal.SIGALRM, handle_sigalrm)
 def start(e=None):
     global err
     err = e
-    serve(app, listen="*:8080", threads=2, channel_timeout=20)
+    serve(app, listen="*:8080", threads=4, channel_timeout=20)
