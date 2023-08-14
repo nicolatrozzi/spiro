@@ -16,7 +16,6 @@ class NewCamera:
         debug('Libcamera detected.')
         self.camera = Picamera2()
         transform=Transform(hflip=1)
-        self.camera.configure(preview_config)
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
