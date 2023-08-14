@@ -146,5 +146,3 @@ class NewCamera:
         else:
             print("LensPosition control not available for this camera.")
             # Handle the error or do nothing
-
-cam = NewCamera()
