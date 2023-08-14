@@ -146,3 +146,6 @@ class NewCamera:
         else:
             print("LensPosition control not available for this camera.")
             # Handle the error or do nothing
+
+if __name__ == '__main__':
+    cam = NewCamera()
