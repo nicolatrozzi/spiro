@@ -87,8 +87,8 @@ class Experimenter(threading.Thread):
             # turn on led
             self.hw.LEDControl(True)
             time.sleep(0.5)
-            self.cam.shutter_speed = 1000000 // 100
-            self.cam.iso = 1000
+            self.cam.shutter_speed = 1000000 // 5
+            self.cam.iso = 2000
             filename = os.path.join(self.dir, name + "-night.png")
         
         if prev_daytime != self.daytime and self.daytime and self.cam.awb_mode != "off":
