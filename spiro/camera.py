@@ -135,7 +135,7 @@ class NewCamera:
     @property
     def resolution(self):
         # XXX
-        return (1920, 1600)
+        return (1920, 1080)
 
     @resolution.setter
     def resolution(self, res):
