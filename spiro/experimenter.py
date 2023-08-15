@@ -59,7 +59,7 @@ class Experimenter(threading.Thread):
         self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
         output = self.cam.camera.capture_array('lores')
         debug("Daytime estimation mean value: " + str(output.mean()))
-        return output.mean() > 10
+        return output.mean() > 75
 
 
     def setWB(self):
