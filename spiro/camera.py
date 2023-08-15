@@ -19,7 +19,7 @@ class NewCamera:
         self.streaming = False
         self.stream_output = None
         self.still_config = self.camera.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (1920, 1080)})
-        self.video_config = self.camera.create_video_configuration(main={"size": (4056, 3040)})
+        self.video_config = self.camera.create_video_configuration(main={"size": (3840, 2160)})
         self.camera.configure(self.video_config)
         
          # Define the default scaler crop as the full resolution
