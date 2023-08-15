@@ -87,7 +87,7 @@ class Experimenter(threading.Thread):
             # turn on led
             self.hw.LEDControl(True)
             time.sleep(0.5)
-            self.cam.shutter_speed = 1000000 // 10
+            self.cam.shutter_speed = 1000000 // 100
             self.cam.iso = 1000
             filename = os.path.join(self.dir, name + "-night.png")
         
