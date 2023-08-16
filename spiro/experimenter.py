@@ -69,7 +69,6 @@ class Experimenter(threading.Thread):
         self.cam.AwbMode = "AwbModeEnumAuto"
         time.sleep(2)
 
-
     def takePicture(self, name, plate_no):
         filename = ""
         stream = BytesIO()
@@ -89,6 +88,7 @@ class Experimenter(threading.Thread):
             self.cam.shutter_speed = 1000000 // 5
             self.cam.iso = 2000
             self.setWB()
+            self.cam.NoiseReductionMode = "draft.NoiseReductionModeEnumoHighQuality"
             filename = os.path.join(self.dir, name + "-night.png")
         
         if prev_daytime != self.daytime and self.daytime and self.cam.awb_mode != "off":
