@@ -87,8 +87,8 @@ class Experimenter(threading.Thread):
             # turn on led
             self.hw.LEDControl(True)
             time.sleep(0.5)
-            self.cam.shutter_speed = 1000000 // 5
-            self.cam.iso = 2000
+            self.cam.shutter_speed = 1000000 // self.cfg.get('nightshutter')
+            self.cam.iso = self.cfg.get('nightiso')
             filename = os.path.join(self.dir, name + "-night.png")
         
         if prev_daytime != self.daytime and self.daytime and self.cam.awb_mode != "off":
@@ -165,7 +165,7 @@ class Experimenter(threading.Thread):
 
         try:
             debug("Starting experiment.")
-            self.cam.still_mode() # XXX: figure out a nice way to handle this switch for both camera stacks
+            self.cam.still_mode()
             self.running = True
             self.status = "Initiating"
             self.starttime = time.time()
