@@ -66,7 +66,7 @@ class Experimenter(threading.Thread):
     def setWB(self):
         debug("Determining white balance.")
         self.cam.AwbEnable = "true"
-        self.cam.AwbMode = "AwbModeEnumAuto"
+        self.cam.AwbMode = "Auto"
         time.sleep(2)
 
     def takePicture(self, name, plate_no):
@@ -87,7 +87,6 @@ class Experimenter(threading.Thread):
             time.sleep(0.5)
             self.cam.shutter_speed = 1000000 // 5
             self.cam.iso = 2000
-            self.cam.Saturation = 0.0
             filename = os.path.join(self.dir, name + "-night.png")
         
         if prev_daytime != self.daytime and self.daytime and self.cam.awb_mode != "off":
