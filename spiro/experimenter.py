@@ -60,13 +60,13 @@ class Experimenter(threading.Thread):
         self.cam.shutter_speed = 1000000 // self.cfg.get('dayshutter')
         output = self.cam.camera.capture_array('lores')
         debug("Daytime estimation mean value: " + str(output.mean()))
-        return output.mean() > 75
+        return output.mean() > 150
 
 
     def setWB(self):
         debug("Determining white balance.")
         self.cam.AwbEnable = "true"
-        self.cam.AwbMode = "Auto"
+        self.cam.AwbMode = "AwbModeEnumAuto"
         time.sleep(2)
 
     def takePicture(self, name, plate_no):
