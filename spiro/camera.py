@@ -18,7 +18,7 @@ class NewCamera:
         self.type = 'libcamera'
         self.streaming = False
         self.stream_output = None
-        self.still_config = self.camera.create_still_configuration(main={"size": (1900, 1600)}, lores={"size": (1900, 1600)})
+        self.still_config = self.camera.create_still_configuration(main={"size": (3296, 2464)}, lores={"size": (1900, 1600)})
         self.video_config = self.camera.create_video_configuration(main={"size": (1200, 1000)})
         self.camera.configure(self.video_config)
         
@@ -135,7 +135,7 @@ class NewCamera:
     @property
     def resolution(self):
         # XXX
-        return (1900, 1600)
+        return (3296, 2464)
 
     @resolution.setter
     def resolution(self, res):
