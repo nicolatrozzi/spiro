@@ -13,6 +13,7 @@ from statistics import mean
 from collections import deque
 from spiro.config import Config
 from spiro.logger import log, debug
+from libcamera import controls
 
 class Experimenter(threading.Thread):
     def __init__(self, hw=None, cam=None):
@@ -66,9 +67,6 @@ class Experimenter(threading.Thread):
         debug("Determining white balance.")
         self.cam.awb_mode = "auto"
         time.sleep(2)
-        g = self.cam.awb_gains
-        self.cam.awb_mode = "off"
-        self.cam.awb_gains = g
 
 
     def takePicture(self, name, plate_no):
