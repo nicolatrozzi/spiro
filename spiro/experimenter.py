@@ -65,7 +65,8 @@ class Experimenter(threading.Thread):
 
     def setWB(self):
         debug("Determining white balance.")
-        self.cam.awb_mode = "auto"
+        self.cam.AwbEnable = "true"
+        self.cam.AwbMode = "AwbModeEnumAuto"
         time.sleep(2)
 
 
