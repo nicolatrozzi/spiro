@@ -87,7 +87,6 @@ class Experimenter(threading.Thread):
             time.sleep(0.5)
             self.cam.shutter_speed = 1000000 // 5
             self.cam.iso = 2000
-            self.setWB()
             self.cam.NoiseReductionMode = "draft.NoiseReductionModeEnumoHighQuality"
             filename = os.path.join(self.dir, name + "-night.png")
         
