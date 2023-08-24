@@ -84,9 +84,9 @@ div.tool {
 .pure-button {
     font-family: 'Saira Condensed', sans-serif;
     font-weight: bold;
-    font-size: 14pt; /* you can adjust this if needed */
-    min-width: 150px; /* Set a minimum width to accommodate longer text */
-    padding: 10px 20px; /* Adjust padding to give text more space inside the button */
+    font-size: 16pt; /* Increase font size */
+    min-width: 130px;
+    padding: 5px 10px;
 }
 
 .pure-form label {
