@@ -84,9 +84,12 @@ div.tool {
 .pure-button {
     font-family: 'Saira Condensed', sans-serif;
     font-weight: bold;
-    font-size: 16pt; /* Increase font size */
+    font-size: 14pt;
     min-width: 130px;
-    padding: 5px 10px;
+    padding: 5px 10px; 
+    white-space: nowrap; /* This ensures that the text doesn't wrap to the next line */
+    overflow: hidden;   /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
 }
 
 .pure-form label {
