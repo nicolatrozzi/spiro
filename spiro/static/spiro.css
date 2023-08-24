@@ -84,12 +84,16 @@ div.tool {
 
 .pure-button {
     font-family: 'Saira Condensed', sans-serif;
+    font-weight: bold;
     font-size: 14pt;
-    width: 150px;
+    min-width: 150px;
+    padding: 5px 10px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .large-button {
-    font-family: 'Saira Condensed', sans-serif;
     font-size: 20pt;
     width: 300px;
 }
