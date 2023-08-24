@@ -94,8 +94,13 @@ div.tool {
 }
 
 .large-button {
-    font-size: 20pt;
-    width: 300px;
+    font-size: 18pt;
+    width: 250px;
+}
+
+.shutdown-section {
+    clear: both;
+    display: block;
 }
 
 .pure-form label {
