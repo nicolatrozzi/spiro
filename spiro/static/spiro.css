@@ -84,8 +84,7 @@ div.tool {
 
 .pure-button {
     font-size: 20pt;
-    padding: 5px 10px; 
-    min-width: 3000px;
+    width: 500px;
 }
 
 .pure-form label {
