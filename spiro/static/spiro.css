@@ -83,8 +83,15 @@ div.tool {
 }
 
 .pure-button {
+    font-family: 'Saira Condensed', sans-serif;
+    font-size: 14pt;
+    width: 150px;
+}
+
+.large-button {
+    font-family: 'Saira Condensed', sans-serif;
     font-size: 20pt;
-    width: 200px;
+    width: 300px;
 }
 
 .pure-form label {
